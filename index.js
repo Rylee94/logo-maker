@@ -20,7 +20,7 @@ function promptUser() {
         type: "checkbox",
         name: "shape",
         message: "Choose shape of logo",
-        choices: ["Circle", "Rectangle", "Triangle"],
+        choices: ["Circle", "Square", "Triangle"],
       },
       {
         type: "input",
@@ -44,8 +44,8 @@ function generateSVG(data) {
       switch (selectedShape) {
         case "Circle":
           return `<circle cx="50" cy="50" r="40" fill="${shapeFillColor}" />`;
-        case "Rectangle":
-          return `<rect x="10" y="10" width="80" height="80" fill="${shapeFillColor}" />`;
+        case "Square":
+          return `<rect x="100" y="100" fill="${shapeFillColor}"/>`;
         case "Triangle":
           return `<polygon points="50,10 90,90 10,90" fill="${shapeFillColor}" />`;
         default:
