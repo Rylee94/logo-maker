@@ -10,6 +10,12 @@ function promptUser() {
         type: "input",
         name: "title",
         message: "Enter logo text up to three characters",
+        validate: function (input) {
+          if (input.length > 3) {
+            return "Title must be up to three characters long";
+          }
+          return true;
+        },
       },
       {
         type: "input",
@@ -39,25 +45,46 @@ function promptUser() {
 function generateSVG(data) {
   const { title, textColor, shape, shapeFillColor } = data;
 
-  const shapeElements = shape
-    .map((selectedShape) => {
-      switch (selectedShape) {
-        case "Circle":
-          return `<circle cx="50" cy="50" r="40" fill="${shapeFillColor}" />`;
-        case "Square":
-          return `<rect x="100" y="100" fill="${shapeFillColor}"/>`;
-        case "Triangle":
-          return `<polygon points="50,10 90,90 10,90" fill="${shapeFillColor}" />`;
-        default:
-          return "";
-      }
-    })
-    .join("");
+  let shapeElements = "";
+  let shapeX = 0;
+  let shapeY = 0;
+  let svgWidth = 300;
+  let svgHeight = 200;
 
-  const svgContent = `<svg width="100" height="100">
-      ${shapeElements}
-      <text x="50%" y="50%" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">${title}</text>
-    </svg>`;
+  switch (shape[0]) {
+    case "Circle":
+      shapeElements = `<circle cx="${svgWidth / 2}" cy="${
+        svgHeight / 2
+      }" r="40" fill="${shapeFillColor}" />`;
+      shapeX = svgWidth / 2;
+      shapeY = svgHeight / 2;
+      break;
+    case "Square":
+      const squareSize = Math.min(svgWidth, svgHeight) - 60;
+      const squareX = (svgWidth - squareSize) / 2;
+      const squareY = (svgHeight - squareSize) / 2;
+      shapeElements = `<rect x="${squareX}" y="${squareY}" width="${squareSize}" height="${squareSize}" fill="${shapeFillColor}"/>`;
+      shapeX = svgWidth / 2;
+      shapeY = svgHeight / 2;
+      break;
+    case "Triangle":
+      shapeElements = `<polygon points="${svgWidth / 2 - 40},${
+        svgHeight / 2 + 30
+      } ${svgWidth / 2 + 40},${svgHeight / 2 + 30} ${svgWidth / 2},${
+        svgHeight / 2 - 40
+      }" fill="${shapeFillColor}" />`;
+      shapeX = svgWidth / 2;
+      shapeY = svgHeight / 2 - 5;
+      break;
+    default:
+      shapeElements = "";
+      break;
+  }
+
+  const svgContent = `<svg width="${svgWidth}" height="${svgHeight}">
+    ${shapeElements}
+    <text x="${shapeX}" y="${shapeY}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle">${title}</text>
+  </svg>`;
 
   const fileName = "logo.svg";
   const filePath = path.join(process.cwd(), fileName);
