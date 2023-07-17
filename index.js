@@ -74,16 +74,18 @@ function generateSVG(data) {
         svgHeight / 2 - 40
       }" fill="${shapeFillColor}" />`;
       shapeX = svgWidth / 2;
-      shapeY = svgHeight / 2 - 5;
+      shapeY = svgHeight / 2 + 15; // Adjust the value to lower the title
       break;
     default:
       shapeElements = "";
       break;
   }
 
+  const fontSize = Math.min(svgWidth, svgHeight) / (title.length > 2 ? 10 : 7); // Adjust the divisor for font scaling
+
   const svgContent = `<svg width="${svgWidth}" height="${svgHeight}">
     ${shapeElements}
-    <text x="${shapeX}" y="${shapeY}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle">${title}</text>
+    <text x="${shapeX}" y="${shapeY}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" font-size="${fontSize}px">${title}</text>
   </svg>`;
 
   const fileName = "logo.svg";
